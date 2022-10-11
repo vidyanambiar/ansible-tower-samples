@@ -1,0 +1,7 @@
+- name: Hello Test Foo
+  hosts: all
+  tasks:
+    - name: Hello Test Foo
+      debug:
+        msg: "Hello Test!"
+
