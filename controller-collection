@@ -1,0 +1,55 @@
+- name: Create Job Template on Remote Controller
+  # This runs the playbook on your local machine
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  collections:
+    - ansible.controller
+
+  vars:
+    # --- YOUR TARGET CONTROLLER ---
+    controller_host: "https://44.204.152.112"
+    controller_user: "admin"
+    controller_password: "Admin!Password!Gw" # Or hardcode: "your_password"
+
+  tasks:
+    - name: Create the Job Template with a Survey
+      job_template:
+        # --- Controller Connection ---
+        controller_host: "{{ controller_host }}"
+        controller_username: "{{ controller_user }}"
+        controller_password: "{{ controller_password }}"
+
+        # --- Still Required ---
+        # Because you're using an IP, the SSL cert won't be valid
+        validate_certs: false
+
+        # --- Job Template Details (CHANGE THESE) ---
+        name: "My Job Template with Survey"
+        state: present
+        inventory: "Demo Inventory"  # <-- Needs to exist on the controller
+        project: "Demo Project"      # <-- Needs to exist on the controller
+        playbook: "hello_world.yml"     # <-- Needs to exist in the Project
+
+        # --- Your Survey ---
+        survey_enabled: true
+        survey_spec:
+          name: ""
+          description: ""
+          spec:
+            - max: 1024
+              min: 0
+              type: multiplechoice
+              choices:
+                - CoreGilbarco
+                - CoreWayne
+                - CoreHongYang
+                - CoreTokheim
+                - CoreMepsan
+                - CoreSpeedSolutions
+                - MultiCore
+              required: true
+              variable: coretype_svy_wf
+              new_question: False
+              question_name: "Seleccione el core/servicio a instalar"
